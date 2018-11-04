@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CrapChat.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultUsername" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Anon</Value>
+    </Setting>
+    <Setting Name="DefaultPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14242</Value>
+    </Setting>
+    <Setting Name="DefaultNewServerName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">New Server</Value>
+    </Setting>
+    <Setting Name="DefaultNewServerPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14242</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
