@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label3;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.NameInputBox = new System.Windows.Forms.TextBox();
             this.usernameLabel = new System.Windows.Forms.Label();
             this.confirmNameButton = new System.Windows.Forms.Button();
@@ -50,6 +52,7 @@
             this.CreateNewServerButton = new System.Windows.Forms.Button();
             this.NewServerPortBox = new System.Windows.Forms.TextBox();
             this.ShutdownServer = new System.Windows.Forms.Button();
+            this.RefreshTimer = new System.Windows.Forms.Timer(this.components);
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -109,7 +112,7 @@
             this.ServerList.ScrollAlwaysVisible = true;
             this.ServerList.Size = new System.Drawing.Size(379, 108);
             this.ServerList.TabIndex = 3;
-            this.ServerList.SelectedIndexChanged += new System.EventHandler(this.SelectedServerChanged);
+            this.ServerList.SelectedValueChanged += new System.EventHandler(this.SelectedServerChanged);
             // 
             // serversFoundLabel
             // 
@@ -172,6 +175,7 @@
             this.DisconnectButton.TabIndex = 9;
             this.DisconnectButton.Text = "Disconnect";
             this.DisconnectButton.UseVisualStyleBackColor = false;
+            this.DisconnectButton.Click += new System.EventHandler(this.DisconnectButton_Click);
             // 
             // ClientNameList
             // 
@@ -179,7 +183,9 @@
             this.ClientNameList.Location = new System.Drawing.Point(12, 392);
             this.ClientNameList.Name = "ClientNameList";
             this.ClientNameList.Size = new System.Drawing.Size(263, 82);
+            this.ClientNameList.Sorted = true;
             this.ClientNameList.TabIndex = 10;
+            this.ClientNameList.SelectedValueChanged += new System.EventHandler(this.SelectedUserChanged);
             // 
             // MuteButton
             // 
@@ -189,6 +195,7 @@
             this.MuteButton.TabIndex = 11;
             this.MuteButton.Text = "Mute Person";
             this.MuteButton.UseVisualStyleBackColor = true;
+            this.MuteButton.Click += new System.EventHandler(this.MuteButton_Click);
             // 
             // KickButton
             // 
@@ -198,6 +205,7 @@
             this.KickButton.TabIndex = 12;
             this.KickButton.Text = "Kick Person";
             this.KickButton.UseVisualStyleBackColor = true;
+            this.KickButton.Click += new System.EventHandler(this.KickButton_Click);
             // 
             // PortTextBox
             // 
@@ -263,6 +271,12 @@
             this.ShutdownServer.UseVisualStyleBackColor = false;
             this.ShutdownServer.Click += new System.EventHandler(this.ShutdownServer_Click);
             // 
+            // RefreshTimer
+            // 
+            this.RefreshTimer.Enabled = true;
+            this.RefreshTimer.Interval = global::CrapChat.Properties.Settings.Default.AutoRefreshInterval;
+            this.RefreshTimer.Tick += new System.EventHandler(this.TimerTick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -291,7 +305,7 @@
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.NameInputBox);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Crap Chat 2";
@@ -322,6 +336,7 @@
         public System.Windows.Forms.Button CreateNewServerButton;
         public System.Windows.Forms.Button ShutdownServer;
         public System.Windows.Forms.ListBox ClientNameList;
+        private System.Windows.Forms.Timer RefreshTimer;
     }
 }
 

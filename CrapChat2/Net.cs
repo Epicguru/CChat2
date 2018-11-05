@@ -86,7 +86,7 @@ namespace CrapChat
 
             try
             {
-                Client.Connect(ip, port);
+                Client.Connect(ip, port, Client.CreateMessage(Main.ActiveUsername));
                 return true;
             }
             catch (Exception e)
@@ -96,10 +96,17 @@ namespace CrapChat
             }
         }
 
-        public static void UponClientDisconnected()
+        public static void UponClientConnected()
         {
-            Main.SetStatus("Disconnected");
+            Audio.InitAll();
+            Main.UponConnected();
+        }
+
+        public static void UponClientDisconnected()
+        {            
             Client = null;
+            Audio.ClearAll();
+            Main.UponDisconnected();
         }
 
         public static void DiscoverPeers(int port, CClient.ServerFound callback)
@@ -137,6 +144,7 @@ namespace CrapChat
             Main.Log("Started hosting server on port " + port + " called " + name);
 
             Main.SetStatus("Hosting Server (" + name.Trim() + ", " + port + ")");
+            Audio.InitAll();
 
             return true;
         }
@@ -150,6 +158,8 @@ namespace CrapChat
             Server = null;
 
             Main.Log("The locally hosted server has been shut down.");
+            Audio.ClearAll();
+            Main.UponServerStop();
         }
     }
 

@@ -14,7 +14,6 @@ namespace CrapChat
                 return !string.IsNullOrWhiteSpace(this.NameInputBox.Text.Trim());
             }
         }
-
         private bool IsNewServerNameValid
         {
             get
@@ -22,7 +21,6 @@ namespace CrapChat
                 return !string.IsNullOrWhiteSpace(GetNewServerName());
             }
         }
-
         private bool IsNewServerPortvalid
         {
             get
@@ -31,7 +29,7 @@ namespace CrapChat
             }
         }
 
-        public string ActiveUsername = null;
+        public static string ActiveUsername = null;
 
         public Main()
         {
@@ -66,6 +64,12 @@ namespace CrapChat
             SetPortNumber(Properties.Settings.Default.DefaultPort);
             this.NewServerNameBox.Text = Properties.Settings.Default.DefaultNewServerName;
             this.NewServerPortBox.Text = Properties.Settings.Default.DefaultNewServerPort.ToString();
+
+            bool autoLogin = Properties.Settings.Default.AutoLogin;
+            if (autoLogin)
+            {
+                ConfirmNameClicked(null, null);
+            }
         }
 
         public static void AddUser(string name)
@@ -142,7 +146,10 @@ namespace CrapChat
 
         private FoundServer GetSelectedServer()
         {
-            return (FoundServer)this.ServerList.SelectedItem;
+            if (ServerList.SelectedItem != null)
+                return (FoundServer)this.ServerList.SelectedItem;
+            else
+                return new FoundServer();
         }
 
         private void SetPortNumber(int port)
@@ -154,7 +161,7 @@ namespace CrapChat
         {
             Log("Selected " + GetSelectedServer());
 
-            if(!Net.IsServer && !Net.IsConnecting)
+            if(!Net.IsServer && !Net.IsConnecting && !GetSelectedServer().IsInvalid())
                 SetButtonState(ConnectButton, true);
         }
 
@@ -241,6 +248,7 @@ namespace CrapChat
             }
             ServerList.Items.Clear();
             Net.DiscoverPeers(GetRefreshPort(), ServerDiscovered);
+            SetButtonState(ConnectButton, false);
             System.GC.Collect();
         }
 
@@ -261,6 +269,8 @@ namespace CrapChat
                 SetButtonState(CreateNewServerButton, false);
                 SetButtonState(ShutdownServer, true);
                 RefreshButtonClick(null, null);
+                ClearUsers();
+                AddUser(ActiveUsername);
             }
         }
 
@@ -282,7 +292,33 @@ namespace CrapChat
                 return;
 
             Log("Attempting to connect to " + s);
-            Net.ConnectClient(s.EndPoint.Address.ToString(), s.EndPoint.Port);
+            bool worked = Net.ConnectClient(s.EndPoint.Address.ToString(), s.EndPoint.Port);
+            if (worked)
+            {
+                SetButtonState(ConnectButton, false);
+            }
+        }
+
+        public static void UponDisconnected()
+        {
+            Instance.SetButtonState(Instance.DisconnectButton, false);
+            Instance.SetButtonState(Instance.ConnectButton, false);
+            Instance.ServerList.ClearSelected();
+            SetStatus("Disconnected");
+            ClearUsers();            
+            Instance.RefreshButtonClick(null, null);
+        }
+
+        public static void UponConnected()
+        {
+            Instance.SetButtonState(Instance.DisconnectButton, true);
+            Instance.SetButtonState(Instance.ConnectButton, false);
+        }
+
+        public static void UponServerStop()
+        {
+            Instance.SetButtonState(Instance.MuteButton, false);
+            Instance.SetButtonState(Instance.KickButton, false);
         }
 
         private void ShutdownServer_Click(object sender, EventArgs e)
@@ -290,7 +326,103 @@ namespace CrapChat
             Net.StopServer();
             RefreshButtonClick(null, null);
             SetButtonState(ShutdownServer, false);
+            if (!string.IsNullOrWhiteSpace(GetNewServerName()) && !Net.IsServer && !string.IsNullOrWhiteSpace(ActiveUsername))
+            {
+                SetButtonState(CreateNewServerButton, true);
+            }
+            ClearUsers();
             SetStatus("Disconnected");
+        }
+
+        private void DisconnectButton_Click(object sender, EventArgs e)
+        {
+            if(Net.IsClient && Net.IsConnected)
+            {
+                SetButtonState(DisconnectButton, false);
+                Net.StopClient();
+            }
+            else
+            {
+                SetButtonState(DisconnectButton, false);
+            }
+        }
+
+        private string GetSelectedUser()
+        {
+            return ClientNameList.SelectedItem == null ? null : (string)ClientNameList.SelectedItem;
+        }
+
+        private void KickButton_Click(object sender, EventArgs e)
+        {
+            string name = GetSelectedUser();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                if (Net.IsServer)
+                {
+                    Net.Server.Kick(name);
+                }
+            }
+        }
+
+        private void MuteButton_Click(object sender, EventArgs e)
+        {
+            string name = GetSelectedUser();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                if (Net.IsServer)
+                {
+                    bool isMuted = Net.Server.IsMuted(name);
+                    if (isMuted)
+                    {
+                        Net.Server.Unmute(name);
+                        MuteButton.Text = "Mute Person";
+                    }
+                    else
+                    {
+                        Net.Server.Mute(name);
+                        MuteButton.Text = "Un-mute Person";
+                    }
+                }
+            }
+        }
+
+        private void SelectedUserChanged(object sender, EventArgs e)
+        {
+            if (!Net.IsServer)
+                return;
+
+            string selected = this.ClientNameList.SelectedItem as string;
+
+            if (!string.IsNullOrWhiteSpace(selected))
+            {
+                if(selected == ActiveUsername)
+                {
+                    SetButtonState(KickButton, false);
+                    SetButtonState(MuteButton, true);
+                    MuteButton.Text = "Mute Person";
+                }
+                else
+                {
+                    SetButtonState(KickButton, true);
+                    SetButtonState(MuteButton, true);
+
+                    bool muted = Net.Server.IsMuted(selected);
+                    MuteButton.Text = muted ? "Un-mute Person" : "Mute Person";
+                }
+            }
+            else
+            {
+                SetButtonState(KickButton, false);
+                SetButtonState(MuteButton, false);
+                MuteButton.Text = "Mute Person";
+            }
+        }
+
+        private void TimerTick(object sender, EventArgs e)
+        {
+            // This is the refresh timer.
+            if(RefreshButton.Enabled && !Net.IsConnected)
+                RefreshButtonClick(null, null);
         }
     }
 }

@@ -52,17 +52,23 @@ namespace CrapChat
                     {
                         Main.SetStatus("Connected to " + msg.SenderEndPoint.Address);
                         Main.Log("Connected!");
+                        Net.UponClientConnected();
                     }
                     else if(status == NetConnectionStatus.Disconnected)
                     {
                         Main.Log("Disconnected from server. Reason: " + statusText);
                         Net.UponClientDisconnected();
-                        MessageBox.Show(Main.Instance, "Disconnected from server: " + statusText, "Disconnected", MessageBoxButtons.OK);
+                        MessageBox.Show("Disconnected from server: " + statusText, "Disconnected", MessageBoxButtons.OK);
                     }
                     else
                     {
                         Main.SetStatus(status.ToString());
                     }
+                    break;
+
+                case NetIncomingMessageType.Data:
+                    var type = (DataType)msg.ReadByte();
+                    ProcessData(type, msg, client);
                     break;
 
                 default:
@@ -73,15 +79,20 @@ namespace CrapChat
             client.Recycle(msg);
         }
 
+        private static byte[] buffer = new byte[1024 * 10];
         public static void ProcessData(DataType type, NetIncomingMessage msg, CClient c)
         {
+            //Main.Log("Got data of type " + type + ", message is " + msg + ", size " + msg.LengthBytes);
             switch (type)
             {
                 case DataType.AUDIO:
                     // Play this audio.
+
+                    int id = msg.ReadInt32();
                     int bc = msg.ReadInt32();
-                    byte[] bytes = msg.ReadBytes(bc);
-                    Audio.QueuePlay(bytes, bc);
+                    msg.ReadBytes(bc, out buffer);
+
+                    Audio.QueuePlay(id, buffer, bc);
                     break;
                 case DataType.MUTED:
                     bool muted = msg.ReadBoolean();
@@ -96,6 +107,7 @@ namespace CrapChat
                     break;
                 case DataType.NAME:
                     int count = msg.ReadInt32();
+                    Main.Log("Recieving " + count + " names.");
                     for (int i = 0; i < count; i++)
                     {
                         bool add = msg.ReadBoolean();
@@ -107,6 +119,15 @@ namespace CrapChat
                     }
                     break;
             }
+        }
+
+        public void SendAudio(byte[] buffer, int count)
+        {
+            var msg = this.CreateMessage();
+            msg.Write((byte)DataType.AUDIO);
+            msg.Write(count);
+            msg.Write(buffer);
+            SendMessage(msg, NetDeliveryMethod.ReliableOrdered);
         }
     }
 }

@@ -14,7 +14,12 @@ namespace CrapChat
 
         public override string ToString()
         {
-            return Name.Trim();
+            return Name == null ? "" : Name.Trim();
+        }
+
+        public bool IsInvalid()
+        {
+            return this.EndPoint == null;
         }
     }
 }

@@ -14,5 +14,11 @@
     <Setting Name="DefaultNewServerPort" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">14242</Value>
     </Setting>
+    <Setting Name="AutoRefreshInterval" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10000</Value>
+    </Setting>
+    <Setting Name="AutoLogin" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

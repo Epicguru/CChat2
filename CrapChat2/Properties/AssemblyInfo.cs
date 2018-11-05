@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CrapChat2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("It's like discord, but for people who play on LAN. Also way crappier, hence the name.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Epicguru")]
 [assembly: AssemblyProduct("CrapChat2")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
