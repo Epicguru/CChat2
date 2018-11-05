@@ -72,5 +72,41 @@ namespace CrapChat
 
             client.Recycle(msg);
         }
+
+        public static void ProcessData(DataType type, NetIncomingMessage msg, CClient c)
+        {
+            switch (type)
+            {
+                case DataType.AUDIO:
+                    // Play this audio.
+                    int bc = msg.ReadInt32();
+                    byte[] bytes = msg.ReadBytes(bc);
+                    Audio.QueuePlay(bytes, bc);
+                    break;
+                case DataType.MUTED:
+                    bool muted = msg.ReadBoolean();
+                    if (muted)
+                    {
+                        MessageBox.Show("You have been muted by the server owner. Nobody can hear you.", "Muted", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        MessageBox.Show("You have been un-muted by the server owner. Welcome back!", "Un-Muted", MessageBoxButtons.OK);
+                    }
+                    break;
+                case DataType.NAME:
+                    int count = msg.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                    {
+                        bool add = msg.ReadBoolean();
+                        string name = msg.ReadString();
+                        if (add)
+                            Main.AddUser(name);
+                        else
+                            Main.RemoveUser(name);
+                    }
+                    break;
+            }
+        }
     }
 }

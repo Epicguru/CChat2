@@ -152,4 +152,11 @@ namespace CrapChat
             Main.Log("The locally hosted server has been shut down.");
         }
     }
+
+    public enum DataType : byte
+    {
+        AUDIO,
+        MUTED,
+        NAME
+    }
 }

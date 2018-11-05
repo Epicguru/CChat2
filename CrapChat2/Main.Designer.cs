@@ -49,6 +49,7 @@
             this.NewServerNameBox = new System.Windows.Forms.TextBox();
             this.CreateNewServerButton = new System.Windows.Forms.Button();
             this.NewServerPortBox = new System.Windows.Forms.TextBox();
+            this.ShutdownServer = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -235,12 +236,13 @@
             // 
             // CreateNewServerButton
             // 
+            this.CreateNewServerButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.CreateNewServerButton.Location = new System.Drawing.Point(12, 349);
             this.CreateNewServerButton.Name = "CreateNewServerButton";
             this.CreateNewServerButton.Size = new System.Drawing.Size(114, 23);
             this.CreateNewServerButton.TabIndex = 18;
             this.CreateNewServerButton.Text = "Create New Server";
-            this.CreateNewServerButton.UseVisualStyleBackColor = true;
+            this.CreateNewServerButton.UseVisualStyleBackColor = false;
             this.CreateNewServerButton.Click += new System.EventHandler(this.CreateNewServerButtonClick);
             // 
             // NewServerPortBox
@@ -250,11 +252,23 @@
             this.NewServerPortBox.Size = new System.Drawing.Size(100, 20);
             this.NewServerPortBox.TabIndex = 19;
             // 
+            // ShutdownServer
+            // 
+            this.ShutdownServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.ShutdownServer.Location = new System.Drawing.Point(132, 349);
+            this.ShutdownServer.Name = "ShutdownServer";
+            this.ShutdownServer.Size = new System.Drawing.Size(105, 23);
+            this.ShutdownServer.TabIndex = 21;
+            this.ShutdownServer.Text = "Shutdown Server";
+            this.ShutdownServer.UseVisualStyleBackColor = false;
+            this.ShutdownServer.Click += new System.EventHandler(this.ShutdownServer_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(403, 486);
+            this.Controls.Add(this.ShutdownServer);
             this.Controls.Add(label3);
             this.Controls.Add(this.NewServerPortBox);
             this.Controls.Add(this.CreateNewServerButton);
@@ -298,7 +312,6 @@
         public System.Windows.Forms.Label StatusLabel;
         public System.Windows.Forms.Button ConnectButton;
         public System.Windows.Forms.Button DisconnectButton;
-        private System.Windows.Forms.ListBox ClientNameList;
         public System.Windows.Forms.Button MuteButton;
         private System.Windows.Forms.Button KickButton;
         private System.Windows.Forms.Label portLabel;
@@ -307,6 +320,8 @@
         public System.Windows.Forms.TextBox NewServerNameBox;
         public System.Windows.Forms.TextBox NewServerPortBox;
         public System.Windows.Forms.Button CreateNewServerButton;
+        public System.Windows.Forms.Button ShutdownServer;
+        public System.Windows.Forms.ListBox ClientNameList;
     }
 }
 

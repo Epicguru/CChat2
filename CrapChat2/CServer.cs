@@ -11,6 +11,8 @@ namespace CrapChat
     public class CServer : NetServer
     {
         public string Name { get; protected set; }
+        public Dictionary<NetConnection, string> names = new Dictionary<NetConnection, string>();
+        public List<NetConnection> muted = new List<NetConnection>();
 
         public CServer(string name, NetPeerConfiguration config)
             : base(config)
@@ -41,6 +43,9 @@ namespace CrapChat
                     break;
 
                 case NetIncomingMessageType.Data:
+                    // Find the type.
+                    var type = (DataType)msg.ReadByte();
+                    ProcessData(type, msg, server);
                     break;
 
                 case NetIncomingMessageType.DiscoveryRequest:
@@ -49,9 +54,16 @@ namespace CrapChat
                     break;
 
                 case NetIncomingMessageType.ConnectionApproval:
-                    string name = msg.ReadString();
-                    Thread.Sleep(1000);
-                    msg.SenderConnection.Deny("Duplicate name!");
+                    string name = msg.ReadString().Trim();
+                    if (server.names.ContainsValue(name))
+                    {
+                        msg.SenderConnection.Deny("Somebody else on the server already has your username.");
+                    }
+                    else
+                    {
+                        msg.SenderConnection.Approve();
+                        server.SetName(msg.SenderConnection, name);
+                    }
                     break;
 
                 default:
@@ -60,6 +72,63 @@ namespace CrapChat
             }
 
             server.Recycle(msg);
+        }
+
+        public static void ProcessData(DataType type, NetIncomingMessage msg, CServer s)
+        {
+            switch (type)
+            {
+                case DataType.AUDIO:
+                    bool muted = s.IsMuted(msg.SenderConnection);
+                    // Ignore if muted, just don't send.
+                    if (muted)
+                        break;
+
+                    var outMsg = s.CreateMessage();
+                    outMsg.Write((byte)DataType.AUDIO);
+                    int c = msg.ReadInt32();
+                    outMsg.Write(c);
+                    outMsg.Write(msg.ReadBytes(c));
+                    break;
+            }
+        }
+
+        public string GetUsername(NetConnection n)
+        {
+            if (!names.ContainsKey(n))
+                return "[missing]";
+            return names[n];
+        }
+
+        protected void SetName(NetConnection n, string name)
+        {
+            if (names.ContainsKey(n))
+            {
+                Main.Log("Updated user's name from '" + names[n] + "' to '" + name + "'");
+                names[n] = name;
+            }
+            else
+            {
+                names.Add(n, name);
+                Main.Log("User @ " + n.RemoteEndPoint + " has the assigned name '" + name + "'");
+            }
+        }
+
+        public bool IsMuted(NetConnection n)
+        {
+            return muted.Contains(n);
+        }
+
+        public void Mute(NetConnection n)
+        {
+            if(!muted.Contains(n))
+                muted.Add(n);
+        }
+
+        public void Unmute(NetConnection n)
+        {
+            if (muted.Contains(n))
+                muted.Remove(n);
         }
     }
 }

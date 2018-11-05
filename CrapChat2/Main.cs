@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace CrapChat
@@ -56,6 +55,8 @@ namespace CrapChat
             SetButtonState(DisconnectButton, false);
             SetButtonState(ConnectButton, false);
             SetButtonState(CreateNewServerButton, false);
+            SetButtonState(RefreshButton, false);
+            SetButtonState(ShutdownServer, false);
 
             if (!IsValidUsername)
                 DisplayUsernamePrompt(true, "Please type a username");
@@ -65,6 +66,23 @@ namespace CrapChat
             SetPortNumber(Properties.Settings.Default.DefaultPort);
             this.NewServerNameBox.Text = Properties.Settings.Default.DefaultNewServerName;
             this.NewServerPortBox.Text = Properties.Settings.Default.DefaultNewServerPort.ToString();
+        }
+
+        public static void AddUser(string name)
+        {
+            if(!Instance.ClientNameList.Items.Contains(name))
+                Instance.ClientNameList.Items.Add(name);
+        }
+
+        public static void RemoveUser(string name)
+        {
+            if (Instance.ClientNameList.Items.Contains(name))
+                Instance.ClientNameList.Items.Remove(name);
+        }
+
+        public static void ClearUsers()
+        {
+            Instance.ClientNameList.Items.Clear();
         }
 
         private void AppClosing(object sender, FormClosingEventArgs e)
@@ -98,6 +116,11 @@ namespace CrapChat
             this.Text = "Crap Chat 2 - " + ActiveUsername;
 
             DisplayUsernamePrompt(false);
+            SetButtonState(CreateNewServerButton, true);
+
+            if (!RefreshButton.Enabled)
+                RefreshButtonClick(null, null);
+            SetButtonState(RefreshButton, true);
 
             if(!string.IsNullOrWhiteSpace(GetNewServerName()) && !Net.IsServer && !string.IsNullOrWhiteSpace(ActiveUsername))
             {
@@ -131,7 +154,7 @@ namespace CrapChat
         {
             Log("Selected " + GetSelectedServer());
 
-            if(Net.IsServer || !Net.IsConnecting)
+            if(!Net.IsServer && !Net.IsConnecting)
                 SetButtonState(ConnectButton, true);
         }
 
@@ -218,6 +241,7 @@ namespace CrapChat
             }
             ServerList.Items.Clear();
             Net.DiscoverPeers(GetRefreshPort(), ServerDiscovered);
+            System.GC.Collect();
         }
 
         private void ServerDiscovered(FoundServer s)
@@ -235,6 +259,8 @@ namespace CrapChat
             if (worked)
             {
                 SetButtonState(CreateNewServerButton, false);
+                SetButtonState(ShutdownServer, true);
+                RefreshButtonClick(null, null);
             }
         }
 
@@ -257,6 +283,14 @@ namespace CrapChat
 
             Log("Attempting to connect to " + s);
             Net.ConnectClient(s.EndPoint.Address.ToString(), s.EndPoint.Port);
+        }
+
+        private void ShutdownServer_Click(object sender, EventArgs e)
+        {
+            Net.StopServer();
+            RefreshButtonClick(null, null);
+            SetButtonState(ShutdownServer, false);
+            SetStatus("Disconnected");
         }
     }
 }
