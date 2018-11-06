@@ -11,6 +11,32 @@ namespace CrapChat
 {
     public static class Audio
     {
+        public static float MasterVolume
+        {
+            get
+            {
+                if (Output != null)
+                {
+                    return Output.Volume * 100f;
+                }
+                else
+                {
+                    return 0f;
+                }
+            }
+            set
+            {
+                float v = value;
+                if (v < 0f)
+                    v = 0f;
+                if (v > 100f)
+                    v = 100f;
+
+                if (Output != null)
+                    Output.Volume = v / 100f;
+            }
+        }
+
         public static Dictionary<int, BufferedWaveProvider> Providers = new Dictionary<int, BufferedWaveProvider>();
         public static Dictionary<NetConnection, int> IDs = new Dictionary<NetConnection, int>();
         public static WaveOutEvent Output;

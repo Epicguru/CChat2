@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CrapChat
@@ -42,6 +46,12 @@ namespace CrapChat
             FormBorderStyle = FormBorderStyle.FixedSingle;
             this.Text = "Crap Chat 2 - ";
             this.FormClosing += AppClosing;
+            var contextMenu = new ContextMenu();
+            var contentExit = new MenuItem();
+            contextMenu.MenuItems.Add("Exit", new EventHandler(this.ContextExitClicked));
+            contextMenu.MenuItems.Add(new MenuItem("Disconnect", new System.EventHandler(this.DisconnectButton_Click)));
+            contextMenu.MenuItems.Add(new MenuItem("Mute", new System.EventHandler(this.ContextMuteClicked)));
+            this.NotificationIcon.ContextMenu = contextMenu;
 
             // Main entry point here...
             SetStatus("Disconnected");
@@ -55,6 +65,7 @@ namespace CrapChat
             SetButtonState(CreateNewServerButton, false);
             SetButtonState(RefreshButton, false);
             SetButtonState(ShutdownServer, false);
+            SetMasterVolume(Properties.Settings.Default.MasterVolume);
 
             if (!IsValidUsername)
                 DisplayUsernamePrompt(true, "Please type a username");
@@ -69,7 +80,7 @@ namespace CrapChat
             if (autoLogin)
             {
                 ConfirmNameClicked(null, null);
-            }
+            }        
         }
 
         public static void AddUser(string name)
@@ -89,6 +100,22 @@ namespace CrapChat
             Instance.ClientNameList.Items.Clear();
         }
 
+        private void SetMasterVolume(float percentage)
+        {
+            // Where percentage is in the range 0 - 100
+            percentage = Math.Min(Math.Max(percentage, 0f), 100f);
+            this.VolumeBar.Value = (int)Math.Round(percentage / 2f);
+            UpdateVolumeLabel();
+            Audio.MasterVolume = percentage;
+
+            
+        }
+
+        private void UpdateVolumeLabel()
+        {
+            this.masterVolumeLabel.Text = "Master Volume: " + this.VolumeBar.Value * 2 + "%";
+        }
+
         private void AppClosing(object sender, FormClosingEventArgs e)
         {
             Main.Log("Closing...");
@@ -100,7 +127,11 @@ namespace CrapChat
             if (Net.IsServer)
             {
                 Net.StopServer();
-            }            
+            }
+
+            // Update settings.
+            Properties.Settings.Default.MasterVolume = this.VolumeBar.Value * 2;
+            Properties.Settings.Default.Save();
         }
 
         private void ConfirmNameClicked(object sender, EventArgs e)
@@ -195,6 +226,11 @@ namespace CrapChat
         {
             if(b != null)
             {
+                if(b == DisconnectButton)
+                {
+                    this.NotificationIcon.ContextMenu.MenuItems[1].Enabled = enabled;
+                }
+
                 if(b.Enabled != enabled)
                     b.Enabled = enabled;
             }
@@ -338,6 +374,9 @@ namespace CrapChat
         {
             if(Net.IsClient && Net.IsConnected)
             {
+                if (DisconnectButton.Enabled == false)
+                    return;
+
                 SetButtonState(DisconnectButton, false);
                 Net.StopClient();
             }
@@ -423,6 +462,157 @@ namespace CrapChat
             // This is the refresh timer.
             if(RefreshButton.Enabled && !Net.IsConnected)
                 RefreshButtonClick(null, null);
+        }
+
+        private void VolumeBarScroll(object sender, EventArgs e)
+        {
+            UpdateVolumeLabel();
+        }
+
+        private void IconDoubleClicked(object sender, MouseEventArgs e)
+        {
+            Log("Double clicked icon, bringing into focus.");
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
+        }
+
+        private void ContextExitClicked(object sender, EventArgs e)
+        {
+            // Exit the application.
+            this.Close();
+        }
+
+        private void ContextMuteClicked(object sender, EventArgs e)
+        {
+            // Mute the whole thing by setting Master Volume to 0.
+            SetMasterVolume(0f);
+            Log("Muted from context menu.");            
+        }
+
+        private bool GetUploadFolder(out string selected)
+        {
+            using (var fd = new FolderBrowserDialog())
+            {
+                fd.Description = "Select the folder to send...";
+                var result = fd.ShowDialog();
+
+                if(result != DialogResult.OK || fd.SelectedPath == Environment.GetFolderPath(fd.RootFolder))
+                {
+                    selected = null;
+                    return false;
+                }
+                else
+                {
+                    selected = fd.SelectedPath;
+                    return true;
+                }
+            }
+        }
+
+        private void SendFileClicked(object sender, EventArgs e)
+        {
+            Main.Log("Starting new file upload...");
+        }
+
+        private async void SendFolderClicked(object sender, EventArgs e)
+        {
+            Main.Log("Starting new folder upload...");
+            string s;
+            bool worked = GetUploadFolder(out s);
+            if (worked)
+            {
+                Log("User wants to upload " + s);
+
+                using (LoadingForm loading = new LoadingForm())
+                {
+                    loading.SetTitle("Finding all files");
+                    loading.SetDetailsText("Finding all files in the selected directory...");
+                    loading.SetProgressText("");
+                    loading.SetStyle(ProgressBarStyle.Marquee);
+                    loading.ControlBox = false;
+                    loading.Show();
+
+                    string[] files = null;
+                    try
+                    {
+                        await Task.Run(() => files = Directory.EnumerateFiles(s, ".", SearchOption.AllDirectories).ToArray());
+                    }
+                    catch (Exception ex)
+                    {
+                        Main.Log("Failed to list files in directory.");
+                        Log(ex);
+                        MessageBox.Show("There was an error while reading the files in the selected directory: " + ex.Message, "Failed to read files in folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    int fc = files.Length;
+
+                    bool warn = fc >= 20;
+                    string desc = "many";
+                    if (fc >= 1500)
+                    {
+                        desc = "a mind-blowingly humungous number of";
+                    }
+                    else if (fc >= 1000)
+                    {
+                        desc = "an absolutely absurd number of";
+                    }
+                    else if (fc >= 500)
+                    {
+                        desc = "a stupidly high number of";
+                    }
+                    else if (fc >= 100)
+                    {
+                        desc = "loads of";
+                    }
+                    else if (fc > 50)
+                    {
+                        desc = "many, many";
+                    }
+                    else if (fc >= 20)
+                    {
+                        desc = "quite a few";
+                    }
+
+                    Log("Found " + fc + " files in the directory");
+                    if (warn)
+                    {
+                        var result = MessageBox.Show("The folder you selected contains " + fc + " files. That's " + desc + " files to send over the network, and it many take a long time. Do you want to continue with the upload?", "File count warning", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        if (result != DialogResult.Yes)
+                        {
+                            Log("Due to the number of files prompt, the user has decided to cancel the upload.");
+                        }
+                    }
+
+                    long totalSize = 0;
+                    foreach (var file in files)
+                    {
+                        totalSize += new FileInfo(file).Length;
+                    }
+                    const long KB = 1024;
+                    const long MB = KB * KB;
+                    const long GB = MB * KB;
+                    Log(GB);
+
+                    string ending = totalSize >= GB ? "GB" : totalSize >= MB ? "MB" : "KB";
+                    float div = totalSize >= GB ? (float)totalSize / GB : totalSize >= MB ? (float)totalSize / MB : (float)totalSize / KB;
+                    string final = div.ToString("N2") + ending;
+
+                    Log("Total size of all files combined: " + final);
+
+                    System.GC.Collect();
+                }                    
+            }
+            else
+            {
+                Log("Folder upload was canceled before it started.");
+            }
+
+        }
+
+        private void DownloadButtonClicked(object sender, EventArgs e)
+        {
+            Main.Log("Starting file or folder download process...");
         }
     }
 }

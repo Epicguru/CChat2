@@ -167,6 +167,7 @@ namespace CrapChat
     {
         AUDIO,
         MUTED,
-        NAME
+        NAME,
+        FILE
     }
 }
