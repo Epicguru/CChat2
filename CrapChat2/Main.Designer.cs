@@ -53,14 +53,17 @@
             this.NewServerPortBox = new System.Windows.Forms.TextBox();
             this.ShutdownServer = new System.Windows.Forms.Button();
             this.RefreshTimer = new System.Windows.Forms.Timer(this.components);
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.masterVolumeLabel = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(14, 298);
+            label2.Location = new System.Drawing.Point(14, 316);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(38, 13);
             label2.TabIndex = 17;
@@ -69,7 +72,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(14, 325);
+            label3.Location = new System.Drawing.Point(14, 343);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(29, 13);
             label3.TabIndex = 20;
@@ -77,7 +80,7 @@
             // 
             // NameInputBox
             // 
-            this.NameInputBox.Location = new System.Drawing.Point(12, 62);
+            this.NameInputBox.Location = new System.Drawing.Point(12, 80);
             this.NameInputBox.MaxLength = 16;
             this.NameInputBox.Name = "NameInputBox";
             this.NameInputBox.Size = new System.Drawing.Size(124, 20);
@@ -88,7 +91,7 @@
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
-            this.usernameLabel.Location = new System.Drawing.Point(12, 42);
+            this.usernameLabel.Location = new System.Drawing.Point(12, 60);
             this.usernameLabel.Name = "usernameLabel";
             this.usernameLabel.Size = new System.Drawing.Size(55, 13);
             this.usernameLabel.TabIndex = 1;
@@ -96,7 +99,7 @@
             // 
             // confirmNameButton
             // 
-            this.confirmNameButton.Location = new System.Drawing.Point(142, 62);
+            this.confirmNameButton.Location = new System.Drawing.Point(142, 80);
             this.confirmNameButton.Name = "confirmNameButton";
             this.confirmNameButton.Size = new System.Drawing.Size(92, 20);
             this.confirmNameButton.TabIndex = 2;
@@ -107,7 +110,7 @@
             // ServerList
             // 
             this.ServerList.FormattingEnabled = true;
-            this.ServerList.Location = new System.Drawing.Point(12, 122);
+            this.ServerList.Location = new System.Drawing.Point(12, 140);
             this.ServerList.Name = "ServerList";
             this.ServerList.ScrollAlwaysVisible = true;
             this.ServerList.Size = new System.Drawing.Size(379, 108);
@@ -117,7 +120,7 @@
             // serversFoundLabel
             // 
             this.serversFoundLabel.AutoSize = true;
-            this.serversFoundLabel.Location = new System.Drawing.Point(12, 102);
+            this.serversFoundLabel.Location = new System.Drawing.Point(12, 120);
             this.serversFoundLabel.Name = "serversFoundLabel";
             this.serversFoundLabel.Size = new System.Drawing.Size(79, 13);
             this.serversFoundLabel.TabIndex = 4;
@@ -127,7 +130,7 @@
             // 
             this.typePrompt.AutoSize = true;
             this.typePrompt.ForeColor = System.Drawing.Color.Red;
-            this.typePrompt.Location = new System.Drawing.Point(240, 66);
+            this.typePrompt.Location = new System.Drawing.Point(240, 84);
             this.typePrompt.Name = "typePrompt";
             this.typePrompt.Size = new System.Drawing.Size(93, 13);
             this.typePrompt.TabIndex = 5;
@@ -135,7 +138,7 @@
             // 
             // RefreshButton
             // 
-            this.RefreshButton.Location = new System.Drawing.Point(316, 93);
+            this.RefreshButton.Location = new System.Drawing.Point(316, 111);
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(75, 22);
             this.RefreshButton.TabIndex = 6;
@@ -157,7 +160,7 @@
             // ConnectButton
             // 
             this.ConnectButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ConnectButton.Location = new System.Drawing.Point(12, 236);
+            this.ConnectButton.Location = new System.Drawing.Point(12, 254);
             this.ConnectButton.Name = "ConnectButton";
             this.ConnectButton.Size = new System.Drawing.Size(75, 23);
             this.ConnectButton.TabIndex = 8;
@@ -169,7 +172,7 @@
             // 
             this.DisconnectButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.DisconnectButton.Enabled = false;
-            this.DisconnectButton.Location = new System.Drawing.Point(93, 236);
+            this.DisconnectButton.Location = new System.Drawing.Point(93, 254);
             this.DisconnectButton.Name = "DisconnectButton";
             this.DisconnectButton.Size = new System.Drawing.Size(75, 23);
             this.DisconnectButton.TabIndex = 9;
@@ -180,7 +183,7 @@
             // ClientNameList
             // 
             this.ClientNameList.FormattingEnabled = true;
-            this.ClientNameList.Location = new System.Drawing.Point(12, 392);
+            this.ClientNameList.Location = new System.Drawing.Point(12, 410);
             this.ClientNameList.Name = "ClientNameList";
             this.ClientNameList.Size = new System.Drawing.Size(263, 82);
             this.ClientNameList.Sorted = true;
@@ -189,7 +192,7 @@
             // 
             // MuteButton
             // 
-            this.MuteButton.Location = new System.Drawing.Point(281, 392);
+            this.MuteButton.Location = new System.Drawing.Point(281, 410);
             this.MuteButton.Name = "MuteButton";
             this.MuteButton.Size = new System.Drawing.Size(110, 23);
             this.MuteButton.TabIndex = 11;
@@ -199,7 +202,7 @@
             // 
             // KickButton
             // 
-            this.KickButton.Location = new System.Drawing.Point(281, 421);
+            this.KickButton.Location = new System.Drawing.Point(281, 439);
             this.KickButton.Name = "KickButton";
             this.KickButton.Size = new System.Drawing.Size(110, 23);
             this.KickButton.TabIndex = 12;
@@ -209,7 +212,7 @@
             // 
             // PortTextBox
             // 
-            this.PortTextBox.Location = new System.Drawing.Point(243, 95);
+            this.PortTextBox.Location = new System.Drawing.Point(243, 113);
             this.PortTextBox.Name = "PortTextBox";
             this.PortTextBox.Size = new System.Drawing.Size(67, 20);
             this.PortTextBox.TabIndex = 13;
@@ -218,7 +221,7 @@
             // portLabel
             // 
             this.portLabel.AutoSize = true;
-            this.portLabel.Location = new System.Drawing.Point(208, 98);
+            this.portLabel.Location = new System.Drawing.Point(208, 116);
             this.portLabel.Name = "portLabel";
             this.portLabel.Size = new System.Drawing.Size(29, 13);
             this.portLabel.TabIndex = 14;
@@ -228,7 +231,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(14, 280);
+            this.label1.Location = new System.Drawing.Point(14, 298);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(74, 13);
             this.label1.TabIndex = 15;
@@ -236,7 +239,7 @@
             // 
             // NewServerNameBox
             // 
-            this.NewServerNameBox.Location = new System.Drawing.Point(58, 296);
+            this.NewServerNameBox.Location = new System.Drawing.Point(58, 314);
             this.NewServerNameBox.Name = "NewServerNameBox";
             this.NewServerNameBox.Size = new System.Drawing.Size(100, 20);
             this.NewServerNameBox.TabIndex = 16;
@@ -245,7 +248,7 @@
             // CreateNewServerButton
             // 
             this.CreateNewServerButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.CreateNewServerButton.Location = new System.Drawing.Point(12, 349);
+            this.CreateNewServerButton.Location = new System.Drawing.Point(12, 367);
             this.CreateNewServerButton.Name = "CreateNewServerButton";
             this.CreateNewServerButton.Size = new System.Drawing.Size(114, 23);
             this.CreateNewServerButton.TabIndex = 18;
@@ -255,7 +258,7 @@
             // 
             // NewServerPortBox
             // 
-            this.NewServerPortBox.Location = new System.Drawing.Point(58, 323);
+            this.NewServerPortBox.Location = new System.Drawing.Point(58, 341);
             this.NewServerPortBox.Name = "NewServerPortBox";
             this.NewServerPortBox.Size = new System.Drawing.Size(100, 20);
             this.NewServerPortBox.TabIndex = 19;
@@ -263,7 +266,7 @@
             // ShutdownServer
             // 
             this.ShutdownServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ShutdownServer.Location = new System.Drawing.Point(132, 349);
+            this.ShutdownServer.Location = new System.Drawing.Point(132, 367);
             this.ShutdownServer.Name = "ShutdownServer";
             this.ShutdownServer.Size = new System.Drawing.Size(105, 23);
             this.ShutdownServer.TabIndex = 21;
@@ -277,11 +280,30 @@
             this.RefreshTimer.Interval = global::CrapChat.Properties.Settings.Default.AutoRefreshInterval;
             this.RefreshTimer.Tick += new System.EventHandler(this.TimerTick);
             // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(243, 28);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(148, 45);
+            this.trackBar1.TabIndex = 22;
+            // 
+            // masterVolumeLabel
+            // 
+            this.masterVolumeLabel.AutoSize = true;
+            this.masterVolumeLabel.Location = new System.Drawing.Point(244, 9);
+            this.masterVolumeLabel.Name = "masterVolumeLabel";
+            this.masterVolumeLabel.Size = new System.Drawing.Size(77, 13);
+            this.masterVolumeLabel.TabIndex = 23;
+            this.masterVolumeLabel.Text = "Master Volume";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 486);
+            this.ClientSize = new System.Drawing.Size(403, 500);
+            this.Controls.Add(this.masterVolumeLabel);
+            this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.ShutdownServer);
             this.Controls.Add(label3);
             this.Controls.Add(this.NewServerPortBox);
@@ -309,6 +331,7 @@
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Crap Chat 2";
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -337,6 +360,8 @@
         public System.Windows.Forms.Button ShutdownServer;
         public System.Windows.Forms.ListBox ClientNameList;
         private System.Windows.Forms.Timer RefreshTimer;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label masterVolumeLabel;
     }
 }
 
