@@ -47,10 +47,13 @@ Feel free to use this wherever and however you see fit. You can download the cod
 * Unlimited users and servers.
 * Quite easy to use, even though the UI isn't very pretty.
 * Good for LAN parties where people are separated by rooms and internet connection can't be used or isn't desirable.
+* Very lightweight. All files required for execution total to under 1MB. Downloading the ZIP file will take seconds even on the slowest internet connection.
 
 ## Limitations & Problems
+* Uncompressed, high sample rate audio may bog down slow networks. I intend to allow the server to change audio sampling rate in the future.
 * Currently only supports LAN connections. The users will have to all be connected to the same WiFi network, or otherwise be connected directly.
 * Sudden disconnections may not be handled correctly, leaving ghost users left behind in servers.
+* Not extensively tested. May crash unexpectedly under certain conditions.
 
 ## Why the name?
 I was bored when I started this project. I didn't have any clever names so this is the result. I may change it at some point in the future.
@@ -66,3 +69,4 @@ If you have any suggestions, open an Issue [here](https://github.com/Epicguru/CC
 * Add optional encryption to servers?
 * Allow individual clients to both mute themselves and mute others. (currently only the host can do this)
 * Add a few different volume controls. A main, master volume slider, and ideally individual sliders for each connected user. I also want to make it possible for users individual user's volumes to be 'boosted' because some people have really terrible mics.
+* Once chat is implemented, allow users to share files? Files would be uploaded to the server and then distributed to all other clients. I could make it efficient enough to transmit huge files if I wanted to... Could be useful for LAN parties.
