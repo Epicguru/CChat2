@@ -55,10 +55,7 @@
             this.VolumeBar = new System.Windows.Forms.TrackBar();
             this.masterVolumeLabel = new System.Windows.Forms.Label();
             this.RefreshTimer = new System.Windows.Forms.Timer(this.components);
-            this.ServerChatBox = new System.Windows.Forms.ListBox();
-            this.serverChatLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.ChatInputField = new System.Windows.Forms.TextBox();
             this.NotificationIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -291,7 +288,7 @@
             // 
             // VolumeBar
             // 
-            this.VolumeBar.Location = new System.Drawing.Point(536, 460);
+            this.VolumeBar.Location = new System.Drawing.Point(243, 27);
             this.VolumeBar.Maximum = 50;
             this.VolumeBar.Name = "VolumeBar";
             this.VolumeBar.Size = new System.Drawing.Size(148, 45);
@@ -302,7 +299,7 @@
             // masterVolumeLabel
             // 
             this.masterVolumeLabel.AutoSize = true;
-            this.masterVolumeLabel.Location = new System.Drawing.Point(560, 441);
+            this.masterVolumeLabel.Location = new System.Drawing.Point(267, 8);
             this.masterVolumeLabel.Name = "masterVolumeLabel";
             this.masterVolumeLabel.Size = new System.Drawing.Size(109, 13);
             this.masterVolumeLabel.TabIndex = 23;
@@ -314,23 +311,6 @@
             this.RefreshTimer.Interval = global::CrapChat.Properties.Settings.Default.AutoRefreshInterval;
             this.RefreshTimer.Tick += new System.EventHandler(this.TimerTick);
             // 
-            // ServerChatBox
-            // 
-            this.ServerChatBox.FormattingEnabled = true;
-            this.ServerChatBox.Location = new System.Drawing.Point(419, 54);
-            this.ServerChatBox.Name = "ServerChatBox";
-            this.ServerChatBox.Size = new System.Drawing.Size(265, 342);
-            this.ServerChatBox.TabIndex = 24;
-            // 
-            // serverChatLabel
-            // 
-            this.serverChatLabel.AutoSize = true;
-            this.serverChatLabel.Location = new System.Drawing.Point(416, 38);
-            this.serverChatLabel.Name = "serverChatLabel";
-            this.serverChatLabel.Size = new System.Drawing.Size(63, 13);
-            this.serverChatLabel.TabIndex = 25;
-            this.serverChatLabel.Text = "Server Chat";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -339,13 +319,6 @@
             this.label5.Size = new System.Drawing.Size(92, 13);
             this.label5.TabIndex = 26;
             this.label5.Text = "Connected Users:";
-            // 
-            // ChatInputField
-            // 
-            this.ChatInputField.Location = new System.Drawing.Point(419, 409);
-            this.ChatInputField.Name = "ChatInputField";
-            this.ChatInputField.Size = new System.Drawing.Size(265, 20);
-            this.ChatInputField.TabIndex = 27;
             // 
             // NotificationIcon
             // 
@@ -361,7 +334,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(696, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(400, 24);
             this.menuStrip1.TabIndex = 28;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -380,7 +353,7 @@
             this.sendFolderToolStripMenuItem,
             this.downloadFileToolStripMenuItem});
             this.filesToolStripMenuItem.Name = "filesToolStripMenuItem";
-            this.filesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.filesToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
             this.filesToolStripMenuItem.Text = "Files...";
             // 
             // sendFileToolStripMenuItem
@@ -433,11 +406,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 516);
-            this.Controls.Add(this.ChatInputField);
+            this.ClientSize = new System.Drawing.Size(400, 516);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.serverChatLabel);
-            this.Controls.Add(this.ServerChatBox);
             this.Controls.Add(this.masterVolumeLabel);
             this.Controls.Add(this.VolumeBar);
             this.Controls.Add(this.ShutdownServer);
@@ -502,10 +472,7 @@
         private System.Windows.Forms.Timer RefreshTimer;
         private System.Windows.Forms.Label masterVolumeLabel;
         public System.Windows.Forms.TrackBar VolumeBar;
-        private System.Windows.Forms.Label serverChatLabel;
         private System.Windows.Forms.Label label5;
-        public System.Windows.Forms.TextBox ChatInputField;
-        public System.Windows.Forms.ListBox ServerChatBox;
         private System.Windows.Forms.NotifyIcon NotificationIcon;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;

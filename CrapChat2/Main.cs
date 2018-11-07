@@ -541,9 +541,11 @@ namespace CrapChat
                     {
                         Main.Log("Failed to list files in directory.");
                         Log(ex);
+                        loading.Hide();
                         MessageBox.Show("There was an error while reading the files in the selected directory: " + ex.Message, "Failed to read files in folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
+                    loading.Hide(); 
 
                     int fc = files.Length;
 
@@ -592,13 +594,44 @@ namespace CrapChat
                     const long KB = 1024;
                     const long MB = KB * KB;
                     const long GB = MB * KB;
-                    Log(GB);
 
                     string ending = totalSize >= GB ? "GB" : totalSize >= MB ? "MB" : "KB";
                     float div = totalSize >= GB ? (float)totalSize / GB : totalSize >= MB ? (float)totalSize / MB : (float)totalSize / KB;
                     string final = div.ToString("N2") + ending;
 
                     Log("Total size of all files combined: " + final);
+
+                    if(totalSize > 2 * GB)
+                    {
+                        string flavour = null;
+                        if(totalSize >= 50 * GB)
+                        {
+                            flavour = "honestly such as stupidly large size that I don't know why your'e even trying to send it.";
+                        }
+                        else if(totalSize >= 20 * GB)
+                        {
+                            flavour = "a ridiculous amount of data to send.";
+                        }
+                        else if(totalSize >= 10 * GB)
+                        {
+                            flavour = "a massive amount of data to send.";
+                        }
+                        else if(totalSize >= 2 * GB)
+                        {
+                            flavour = "a large amount of data to send.";
+                        }
+
+                        var res = MessageBox.Show("The folder (and all it's subfolders) contain a total of " + final + ". This is " + flavour + " Are you sure you want to continue sending the folder?", "Large size", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if(res != DialogResult.Yes)
+                        {
+                            Log("The user has decided to cancel the upload process before it started, when warned about the large file size.");
+                            return;
+                        }
+
+                        Log("Starting the upload of '" + s + "' to the current server.");
+                        MessageBox.Show("Once you press OK, the upload process will begin. If you disconnect from the server, the upload will be cancelled and cannot be resumed.");
+
+                    }
 
                     System.GC.Collect();
                 }                    
