@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -80,7 +81,10 @@ namespace CrapChat
             if (autoLogin)
             {
                 ConfirmNameClicked(null, null);
-            }        
+            }
+
+            // Threading stuff.
+            UploadThread.InitThread();
         }
 
         public static void AddUser(string name)
@@ -132,6 +136,9 @@ namespace CrapChat
             // Update settings.
             Properties.Settings.Default.MasterVolume = this.VolumeBar.Value * 2;
             Properties.Settings.Default.Save();
+
+            // Threading shutdown.
+            UploadThread.StopThread();
         }
 
         private void ConfirmNameClicked(object sender, EventArgs e)
@@ -226,8 +233,10 @@ namespace CrapChat
         {
             if(b != null)
             {
+                // TODO: Important, change this to be where it's actually called from.
+                // Also make it so that it is done from another source file.
                 if(b == DisconnectButton)
-                {
+                {                    
                     this.NotificationIcon.ContextMenu.MenuItems[1].Enabled = enabled;
                 }
 
@@ -583,6 +592,7 @@ namespace CrapChat
                         if (result != DialogResult.Yes)
                         {
                             Log("Due to the number of files prompt, the user has decided to cancel the upload.");
+                            return;
                         }
                     }
 
@@ -626,11 +636,45 @@ namespace CrapChat
                         {
                             Log("The user has decided to cancel the upload process before it started, when warned about the large file size.");
                             return;
-                        }
+                        }                            
+                    }
 
-                        Log("Starting the upload of '" + s + "' to the current server.");
-                        MessageBox.Show("Once you press OK, the upload process will begin. If you disconnect from the server, the upload will be cancelled and cannot be resumed.");
+                    Log("Starting the upload of '" + s + "' to the current server.");
+                    MessageBox.Show("Once you press OK, the upload process will begin. If you disconnect from the server, the upload will be cancelled and cannot be resumed.");
 
+                    // Create a new NetFile for the upload.
+                    // TODO make sure we are not already uploading that file.
+                    NetFile n = new NetFile();
+                    n.IsDirectory = true;
+                    n.LocalPath = s;
+                    n.ZipPath = Path.Combine(NetFile.LocalUploads, new DirectoryInfo(s).Name + ".zip");
+                    n.IsDownload = false;
+
+                    // Open a dialog because the operation can take some time.
+                    loading.SetTitle("Zipping folder");
+                    loading.SetDetailsText("The folder is being zipped so that it can be sent to the server. This may take some time.");
+                    loading.SetProgressText("");
+                    loading.SetStyle(ProgressBarStyle.Marquee);
+                    loading.Show();
+
+                    try
+                    {
+                        await Task.Run(() => n.Zip());
+                    }
+                    catch (Exception e2)
+                    {
+                        Log("Error zipping the target folder. Upload process is cancelled.");
+                        loading.Hide();
+                        MessageBox.Show("There was an error when zipping the folder for upload:\n" + e2.Message, "Error sending folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    loading.Hide();
+
+                    lock (UploadThread.Key)
+                    {
+                        // Add it to the thread so that it can be sent.
+                        UploadThread.CurrentUploads.Add(n);
+                        Main.Log("Added the zip file to the upload list.");
                     }
 
                     System.GC.Collect();
@@ -646,6 +690,11 @@ namespace CrapChat
         private void DownloadButtonClicked(object sender, EventArgs e)
         {
             Main.Log("Starting file or folder download process...");
+        }
+
+        private void OpenLocalDownloadDir(object sender, EventArgs e)
+        {
+            Process.Start(NetFile.BaseLocation);
         }
     }
 }

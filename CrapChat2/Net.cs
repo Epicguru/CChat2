@@ -168,6 +168,7 @@ namespace CrapChat
         AUDIO,
         MUTED,
         NAME,
-        FILE
+        FILE_CONTROL, // Requesting a file, proposing a file.
+        FILE // Actual file data.
     }
 }

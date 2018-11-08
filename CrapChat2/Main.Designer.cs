@@ -66,6 +66,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openGithubPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openLocalDownloadDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             hostNameLabel = new System.Windows.Forms.Label();
             hostPortLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).BeginInit();
@@ -351,9 +352,10 @@
             this.filesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sendFileToolStripMenuItem,
             this.sendFolderToolStripMenuItem,
-            this.downloadFileToolStripMenuItem});
+            this.downloadFileToolStripMenuItem,
+            this.openLocalDownloadDirectoryToolStripMenuItem});
             this.filesToolStripMenuItem.Name = "filesToolStripMenuItem";
-            this.filesToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.filesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.filesToolStripMenuItem.Text = "Files...";
             // 
             // sendFileToolStripMenuItem
@@ -401,6 +403,13 @@
             this.checkForNewVersionToolStripMenuItem.Name = "checkForNewVersionToolStripMenuItem";
             this.checkForNewVersionToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.checkForNewVersionToolStripMenuItem.Text = "Check for new version";
+            // 
+            // openLocalDownloadDirectoryToolStripMenuItem
+            // 
+            this.openLocalDownloadDirectoryToolStripMenuItem.Name = "openLocalDownloadDirectoryToolStripMenuItem";
+            this.openLocalDownloadDirectoryToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.openLocalDownloadDirectoryToolStripMenuItem.Text = "Open local download directory";
+            this.openLocalDownloadDirectoryToolStripMenuItem.Click += new System.EventHandler(this.OpenLocalDownloadDir);
             // 
             // Main
             // 
@@ -483,6 +492,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openGithubPageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForNewVersionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openLocalDownloadDirectoryToolStripMenuItem;
     }
 }
 
